@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Image Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .main_container {
+            background-color: rgb(157, 192, 187);
+        }
+
+        .main_container h1 {
+            background-color: dimgray;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        .image_container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 80%;
+            justify-content: center;
+            margin: 10px auto;
+            flex-basis: 50%;
+        }
+
+        .img {
+            position: relative;
+        }
+
+        .img img {
+            border: 2px groove honeydew;
+            margin: 10px;
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 13px 0px rgba(0, 0, 0, 0.75);
+            -webkit-box-shadow: 2px 2px 13px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 2px 2px 13px 0px rgba(0, 0, 0, 0.75);
+        }
+
+        .input_container {
+            text-align: center;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0px auto;
+        }
+
+        .input_container input {
+            border-radius: 20px;
+            padding: 20px;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .input_container button {
+            padding: 10px 20px;
+            width: 40%;
+            margin: 10px auto;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 50px;
+        }
+        @media (max-width: 400px) {
+            .input_container button {
+                width: 70%;
+            }
+
+            .input_container input {
+                font-size: 15px;
+            }
+        }
+
+        /* loading animation  */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Loading spinner styles */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #333;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main_container">
+        <h1>Random Image Generator</h1>
+        <div class="image_container" id="imageContainer">
+            <!-- <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?1">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?2">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?3">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?4">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?5">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?6">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?7">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?8">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?9">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?10">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?11">
+                </div>
+                <div class="img">
+                    <img id="randomImage" src="http://source.unsplash.com/random/200x200/?user?12">
+                </div> -->
+        </div>
+
+        <div class="input_container">
+            <input type="text" id="userInput" placeholder="Enter What You Want See?">
+            <button onclick="updateImages()">Submit Request</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to show loading animation for an individual image
+        function showImageLoading(imgDiv) {
+            var loadingDiv = document.createElement("div");
+            loadingDiv.className = "loading";
+
+            var spinner = document.createElement("div");
+            spinner.className = "spinner";
+
+            loadingDiv.appendChild(spinner);
+            imgDiv.appendChild(loadingDiv);
+
+            loadingDiv.style.display = "block";
+        }
+
+        // Function to hide loading animation for an individual image
+        function hideImageLoading(imgDiv) {
+            var loadingDiv = imgDiv.querySelector(".loading");
+            if (loadingDiv) {
+                loadingDiv.style.display = "none";
+            }
+        }
+
+        // Function to load default images
+        function loadDefaultImages() {
+            var imageContainer = document.getElementById("imageContainer");
+
+            for (var i = 1; i <= 12; i++) {
+                var imgDiv = document.createElement("div");
+                imgDiv.className = "img";
+
+                var img = document.createElement("img");
+                img.src = "http://source.unsplash.com/random/200x200/?default?" + i;
+
+                imgDiv.appendChild(img);
+                imageContainer.appendChild(imgDiv);
+            }
+        }
+
+
+        window.onload = loadDefaultImages;
+
+
+        function updateImages() {
+
+            var userInput = document.getElementById("userInput").value;
+
+
+            var imageContainer = document.getElementById("imageContainer");
+
+
+            imageContainer.innerHTML = '';
+
+
+            for (var i = 1; i <= 12; i++) {
+                var imgDiv = document.createElement("div");
+                imgDiv.className = "img";
+
+                showImageLoading(imgDiv);
+
+                var img = document.createElement("img");
+                img.src = "http://source.unsplash.com/random/200x200/?" + userInput + "?" + i;
+
+
+                img.onload = (function (currentImgDiv) {
+                    return function () {
+
+                        hideImageLoading(currentImgDiv);
+                    };
+                })(imgDiv);
+
+                imgDiv.appendChild(img);
+                imageContainer.appendChild(imgDiv);
+            }
+        }
+    </script>
+</body>
+
+</html>
